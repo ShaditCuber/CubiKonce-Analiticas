@@ -13,7 +13,6 @@ async function fetchPersonsData(persons_to_search) {
 }
 
 function centiToTime(centiseconds, category) {
-    console.log(centiseconds, category)
     if (centiseconds === '-') return '-';
     if (category === '333fm') return centiseconds
     if (centiseconds === 0) return '-';
@@ -28,10 +27,28 @@ function centiToTime(centiseconds, category) {
 
 const Table = () => {
 
-    const categories =
+    const allCategories =
         [
-            "222", "333", "444", "555", "666", "777", "333bf", "333fm", "333oh", "clock", "minx", "pyram", "skewb", "sq1", "444bf", "555bf", "333mbf"
+            "222",
+            "333",
+            "444",
+            "555",
+            "666",
+            "777",
+            "333bf",
+            "333fm",
+            "333oh",
+            "clock",
+            "minx",
+            "pyram",
+            "skewb",
+            "sq1",
+            "444bf",
+            "555bf",
+            "333mbf"
         ]
+
+    const initialVisibleCategories = ["333", "444", "555", "clock"];
 
 
     const string_persons = import.meta.env.VITE_WCA_IDS
@@ -44,15 +61,15 @@ const Table = () => {
     const [sortedCategory, setSortedCategory] = useState(null);
     const [displayType, setDisplayType] = useState('single');
     const [sortOrder, setSortOrder] = useState('asc');
+    const [visibleCategories, setVisibleCategories] = useState(initialVisibleCategories);
+
 
     useEffect(() => {
         async function fetchData() {
             const data = await fetchPersonsData(persons_to_search);
-            console.log(data, 'Data')
             setPersonsData(data);
         }
         fetchData();
-        console.log(personsData, 'personsData')
     }, []);
 
     const handleSort = (category) => {
@@ -89,45 +106,74 @@ const Table = () => {
         setPersonsData(sortedData);
     }
 
+    const handleCategoryChange = (category) => {
+        setVisibleCategories(prevState =>
+            prevState.includes(category)
+                ? prevState.filter(c => c !== category)
+                : [...prevState, category]
+        );
+    };
+
 
 
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">CubiKonce</h1>
-            <div className="mb-4">
+            <div className="mb-6 flex space-x-2">
                 <button
                     onClick={() => setDisplayType('single')}
-                    className={`px-4 py-2 mr-2 border rounded ${displayType === 'single' ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'}`}
+                    className={`w-full px-4 py-2 border rounded ${displayType === 'single' ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'}`}
                 >
                     Mostrar Single
                 </button>
                 <button
                     onClick={() => setDisplayType('average')}
-                    className={`px-4 py-2 border rounded ${displayType === 'average' ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'}`}
+                    className={`w-full px-4 py-2 border rounded ${displayType === 'average' ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'}`}
                 >
                     Mostrar Average
                 </button>
+            </div>
+
+
+            <div className="mb-4">
+                <h2 className="text-xl font-bold mb-2">Seleccionar Categorías</h2>
+                <div className="flex flex-wrap">
+                    {allCategories.map((category) => (
+                        <label key={category} className="mr-4">
+                            <input
+                                type="checkbox"
+                                checked={visibleCategories.includes(category)}
+                                onChange={() => handleCategoryChange(category)}
+                                className="mr-2"
+                            />
+                            {category}
+                        </label>
+                    ))}
+                </div>
             </div>
             <div className="overflow-x-auto">
                 <table className="min-w-full bg-white border-collapse text-sm">
                     <thead>
                         <tr className="bg-gray-200">
-                            <th className="border p-2">Foto</th>
-                            <th className="border p-2">WCA ID</th>
+                            <th className="border p-2">N°</th>
+                            <th className="border p-2 hidden md:block">Foto</th>
+                            <th className="border p-2 ">WCA ID</th>
                             <th className="border p-2">Nombre</th>
-                            {categories.map((category) => (
-                                <th
-                                    key={category}
-                                    className="border p-2 cursor-pointer"
-                                    onClick={() => handleSort(category)}
-                                >
-                                    {category} {displayType === 'single' ? 'Single' : 'Average'}
-                                    {sortedCategory === `${category}-${displayType}` && (
-                                        <span className={`ml-2 ${sortOrder === 'asc' ? 'text-blue-500' : 'text-red-500'}`}>
-                                            {sortOrder === 'asc' ? '▲' : '▼'}
-                                        </span>
-                                    )}
-                                </th>
+                            {allCategories.map((category) => (
+                                visibleCategories.includes(category) && (
+                                    <th
+                                        key={category}
+                                        className="border p-2 cursor-pointer"
+                                        onClick={() => handleSort(category)}
+                                    >
+                                        {category} {displayType === 'single' ? 'Single' : 'Average'}
+                                        {sortedCategory === `${category}-${displayType}` && (
+                                            <span className={`ml-2 ${sortOrder === 'asc' ? 'text-blue-500' : 'text-red-500'}`}>
+                                                {sortOrder === 'asc' ? '▲' : '▼'}
+                                            </span>
+                                        )}
+                                    </th>
+                                )
                             ))}
                             <th className="border p-2">Oro</th>
                             <th className="border p-2">Plata</th>
@@ -145,9 +191,12 @@ const Table = () => {
                     </thead>
                     <tbody>
                         {personsData.length > 0 ? (
-                            personsData.map((person) => (
+                            personsData.map((person, index) => (
                                 <tr key={person.wca_id} className="hover:bg-gray-100">
                                     <td className="border">
+                                        {index + 1}
+                                    </td>
+                                    <td className="border hidden md:block">
                                         <img
                                             src={person.person.avatar.url}
                                             alt={person.person.name}
@@ -164,17 +213,22 @@ const Table = () => {
                                         </a>
                                     </td>
                                     <td className="border p-2">{person.person.name}</td>
-                                    {categories.map((category) => (
-                                        <td key={`${person.wca_id}-${category}`} className="border p-2">
-                                            {person.personal_records[category] ? (
-                                                displayType === 'single' ?
-                                                    centiToTime(
-                                                        person.personal_records[category]?.single.best || '-', category
-                                                    ) : centiToTime(
-                                                        person.personal_records[category]?.average?.best || '-', category
-                                                    )
-                                            ) : '-'}
-                                        </td>
+                                    {allCategories.map((category) => (
+                                        visibleCategories.includes(category) && (
+                                            <td
+                                                key={`${person.wca_id}-${category}`}
+                                                className="border p-2"
+                                            >
+                                                {person.personal_records[category] ? (
+                                                    displayType === 'single' ?
+                                                        centiToTime(
+                                                            person.personal_records[category]?.single.best || '-', category
+                                                        ) : centiToTime(
+                                                            person.personal_records[category]?.average?.best || '-', category
+                                                        )
+                                                ) : '-'}
+                                            </td>
+                                        )
                                     ))}
                                     <td className="border p-2">{person.medals?.gold || 0}</td>
                                     <td className="border p-2">{person.medals?.silver || 0}</td>
@@ -187,7 +241,7 @@ const Table = () => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={categories.length + 8} className="border p-2 text-center">Cargando</td>
+                                <td colSpan={allCategories.length + 8} className="border p-2 text-center">Cargando</td>
                             </tr>
                         )}
                     </tbody>

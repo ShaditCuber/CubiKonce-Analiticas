@@ -8,7 +8,7 @@ function App() {
 
   return (
     <>
-      <div className='flex items-center justify-center'>
+      <div className='overflow-x-auto'>
         <Table />
       </div>
       <Analytics />
