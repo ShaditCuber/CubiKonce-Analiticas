@@ -189,7 +189,7 @@ const Table = () => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={categories.length + 8} className="border p-2 text-center">No data available</td>
+                                <td colSpan={categories.length + 8} className="border p-2 text-center">Cargando</td>
                             </tr>
                         )}
                     </tbody>
