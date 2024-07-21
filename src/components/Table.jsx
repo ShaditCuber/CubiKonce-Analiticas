@@ -56,8 +56,7 @@ const Table = () => {
     }, []);
 
     const handleSort = (category) => {
-        let type = 'single';
-        if (displayType == 'avg') type = 'average';
+        const type = displayType === 'avg' ? 'average' : 'single';
         // Alternar el orden de clasificación
         const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
         setSortOrder(newSortOrder);
@@ -84,7 +83,6 @@ const Table = () => {
     const handleCompetitionCount = () => {
         const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
         setSortOrder(newSortOrder);
-        setSortedCategory('competition_count');
         const sortedData = [...personsData].sort((a, b) => {
             return newSortOrder === 'asc' ? a.competition_count - b.competition_count : b.competition_count - a.competition_count;
         });
@@ -124,7 +122,7 @@ const Table = () => {
                                     onClick={() => handleSort(category)}
                                 >
                                     {category} {displayType === 'single' ? 'Single' : 'Avg'}
-                                    {sortedCategory === category && (
+                                    {sortedCategory === `${category}-${displayType}` && (
                                         <span className={`ml-2 ${sortOrder === 'asc' ? 'text-blue-500' : 'text-red-500'}`}>
                                             {sortOrder === 'asc' ? '▲' : '▼'}
                                         </span>
