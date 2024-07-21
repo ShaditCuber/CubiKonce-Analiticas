@@ -114,6 +114,7 @@ const Table = () => {
                 <table className="min-w-full bg-white border-collapse text-sm">
                     <thead>
                         <tr className="bg-gray-200">
+                            <th className="border p-2">Foto</th>
                             <th className="border p-2">WCA ID</th>
                             <th className="border p-2">Nombre</th>
                             {categories.map((category) => (
@@ -148,6 +149,13 @@ const Table = () => {
                         {personsData.length > 0 ? (
                             personsData.map((person) => (
                                 <tr key={person.wca_id} className="hover:bg-gray-100">
+                                    <td className="border">
+                                        <img
+                                            src={person.person.avatar.url}
+                                            alt={person.person.name}
+                                            className="w-12 h-12 object-cover rounded-full"
+                                        />
+                                    </td>
                                     <td className="border p-2">
                                         <a
                                             href={`https://www.worldcubeassociation.org/persons/${person.person.wca_id}`}
