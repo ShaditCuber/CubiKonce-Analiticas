@@ -56,16 +56,16 @@ const Table = () => {
     }, []);
 
     const handleSort = (category) => {
-        const type = displayType === 'avg' ? 'average' : 'single';
+        // const type = displayType === 'avg' ? 'average' : 'single';
         // Alternar el orden de clasificación
         const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
         setSortOrder(newSortOrder);
-        setSortedCategory(`${category}-${type}`);
+        setSortedCategory(`${category}-${displayType}`);
 
         // Ordenar los datos
         const sortedData = [...personsData].sort((a, b) => {
-            const timeA = a.personal_records[category]?.[type]?.best || Infinity;
-            const timeB = b.personal_records[category]?.[type]?.best || Infinity;
+            const timeA = a.personal_records[category]?.[displayType]?.best || Infinity;
+            const timeB = b.personal_records[category]?.[displayType]?.best || Infinity;
 
             // Si el tiempo es Infinity, asegúrate de que estos se ordenen al final en orden ascendente, o al principio en orden descendente
             if (timeA === Infinity && timeB === Infinity) return 0;
@@ -102,8 +102,8 @@ const Table = () => {
                     Mostrar Single
                 </button>
                 <button
-                    onClick={() => setDisplayType('avg')}
-                    className={`px-4 py-2 border rounded ${displayType === 'avg' ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'}`}
+                    onClick={() => setDisplayType('average')}
+                    className={`px-4 py-2 border rounded ${displayType === 'average' ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'}`}
                 >
                     Mostrar Average
                 </button>
@@ -121,7 +121,7 @@ const Table = () => {
                                     className="border p-2 cursor-pointer"
                                     onClick={() => handleSort(category)}
                                 >
-                                    {category} {displayType === 'single' ? 'Single' : 'Avg'}
+                                    {category} {displayType === 'single' ? 'Single' : 'Average'}
                                     {sortedCategory === `${category}-${displayType}` && (
                                         <span className={`ml-2 ${sortOrder === 'asc' ? 'text-blue-500' : 'text-red-500'}`}>
                                             {sortOrder === 'asc' ? '▲' : '▼'}
