@@ -68,14 +68,13 @@ const Table = () => {
         async function fetchData() {
             const data = await fetchPersonsData(persons_to_search);
             setPersonsData(data);
+            setSortOrder('asc')
+            handleSort('333');
+
         }
         fetchData();
     }, []);
 
-    useEffect(() => {
-        setSortOrder('asc');
-        handleSort('333');
-    }, [personsData]);
 
     const handleSort = (category) => {
         // const type = displayType === 'avg' ? 'average' : 'single';
