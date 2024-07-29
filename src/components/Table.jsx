@@ -67,9 +67,19 @@ const Table = () => {
     useEffect(() => {
         async function fetchData() {
             const data = await fetchPersonsData(persons_to_search);
-            setPersonsData(data);
-            setSortOrder('asc')
-            handleSort('333');
+            const sortedData = data.sort((a, b) => {
+                const timeA = a.personal_records['333']?.single?.best || Infinity;
+                const timeB = b.personal_records['333']?.single?.best || Infinity;
+
+                if (timeA === Infinity && timeB === Infinity) return 0;
+                if (timeA === Infinity) return 1;
+                if (timeB === Infinity) return -1;
+
+                return timeA - timeB;
+            });
+            setPersonsData(sortedData);
+            // setSortOrder('asc')
+            // handleSort('333');
 
         }
         fetchData();
