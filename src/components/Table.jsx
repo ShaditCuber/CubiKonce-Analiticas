@@ -72,6 +72,11 @@ const Table = () => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        setSortOrder('asc');
+        handleSort('333');
+    }, [personsData]);
+
     const handleSort = (category) => {
         // const type = displayType === 'avg' ? 'average' : 'single';
         // Alternar el orden de clasificación
